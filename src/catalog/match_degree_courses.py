@@ -1,4 +1,5 @@
 import csv
+import sys
 from pathlib import Path
 
 
@@ -113,10 +114,11 @@ def write_match_report(file_path, results):
             )
 
 
-def print_summary(results):
+def print_summary(results, degree_name):
     matched = sum(1 for row in results if row["STATUS"] == "MATCHED")
     not_found = sum(1 for row in results if row["STATUS"] == "NOT FOUND")
 
+    print(f"{degree_name}")
     print(f"Matched: {matched}")
     print(f"Not found: {not_found}")
     print()
@@ -130,32 +132,30 @@ def print_summary(results):
 
 
 def main():
+    if len(sys.argv) < 2:
+        print("Usage: python .\\src\\catalog\\match_degree_courses.py <degree_file_name>")
+        print("Example: python .\\src\\catalog\\match_degree_courses.py computer_science_bs.csv")
+        sys.exit(1)
+
     repo_root = Path(__file__).resolve().parents[2]
 
     inventory_file = repo_root / "data" / "processed" / "course_inventory.csv"
+    degree_file_name = sys.argv[1]
+    degree_file = repo_root / "data" / "degree_plans" / "matched" / degree_file_name
 
-    degree_file = (
-        repo_root
-        / "data"
-        / "degree_plans"
-        / "matched"
-        / "computer_science_bs.csv"
-    )
+    if not degree_file.exists():
+        print(f"Degree file not found: {degree_file}")
+        sys.exit(1)
 
-    output_file = (
-        repo_root
-        / "data"
-        / "degree_plans"
-        / "matched"
-        / "computer_science_bs_match_report.csv"
-    )
+    output_name = degree_file.stem + "_match_report.csv"
+    output_file = repo_root / "data" / "degree_plans" / "matched" / output_name
 
     inventory = load_course_inventory(inventory_file)
     degree_courses = load_degree_plan(degree_file)
     results = compare_degree_to_inventory(degree_courses, inventory)
 
     write_match_report(output_file, results)
-    print_summary(results)
+    print_summary(results, degree_file_name)
 
     print()
     print(f"Match report written to: {output_file}")

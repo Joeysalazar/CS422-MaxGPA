@@ -1,0 +1,27 @@
+YEAR,TERM,SUBJ,NUMB,DEGREE_TITLE,INVENTORY_TITLE,STATUS
+1,1,ARCH,201,Intro to Architecture,Intro to Architecture,MATCHED
+1,1,ARCH,202,Design Skills,Design Skills,MATCHED
+1,2,ARCH,222,Intro Arch Comp Graph,Intro Arch Comp Graph,MATCHED
+2,1,ARCH,283,Architectural Design I,Architectural Design I,MATCHED
+2,2,ARCH,284,Architectural Des II,Architectural Des II,MATCHED
+3,1,ARCH,383,Architectural Des III,Architectural Des III,MATCHED
+3,2,ARCH,384,Architectural Des IV,Architectural Des IV,MATCHED
+3,3,ARH,314,Hist of World Arch I,Hist of World Arch I,MATCHED
+4,1,ARH,315,Hist of World Arch II,Hist Western Arch II,MATCHED
+4,1,ARCH,423,Media for Design Devel,Media for Design Devel,MATCHED
+4,1,ARCH,430,Architectural Contexts,Architectural Contexts,MATCHED
+4,2,ARCH,440,Human Context of Des,Human Context of Des,MATCHED
+4,2,ARCH,450,Spatial Composition,Spatial Composition,MATCHED
+4,3,ARCH,461,Structural Behavior,Structural Behavior,MATCHED
+4,3,ARCH,462,Wood & Steel Bldg Sys,Wood & Steel Bldg Sys,MATCHED
+4,1,ARCH,484,Arch Design,Arch Design,MATCHED
+4,2,ARCH,484,Arch Design,Arch Design,MATCHED
+4,3,ARCH,484,Arch Design,Arch Design,MATCHED
+5,1,ARCH,470,Building Construction,Building Construction,MATCHED
+5,1,ARCH,471,Building Enclosure,Building Enclosure,MATCHED
+5,1,ARCH,484,Arch Design,Arch Design,MATCHED
+5,1,ARCH,485,Adv Arch Design I,Adv Arch Design I,MATCHED
+5,2,ARCH,486,Adv Arch Design II,Adv Arch Design II,MATCHED
+5,2,ARCH,491,Envir Control Sys I,Envir Control Sys I,MATCHED
+5,2,ARCH,492,Envir Control Sys II,Envir Control Sys II,MATCHED
+5,3,ARCH,417,Context Arch Profess,Context Arch Profess,MATCHED
