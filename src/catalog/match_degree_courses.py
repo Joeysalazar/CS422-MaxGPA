@@ -1,0 +1,165 @@
+import csv
+from pathlib import Path
+
+
+def load_course_inventory(file_path):
+    inventory = {}
+
+    with file_path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+
+        for row in reader:
+            subj = row.get("SUBJ", "").strip()
+            numb = row.get("NUMB", "").strip()
+            title = row.get("TITLE", "").strip()
+
+            if not subj or not numb:
+                continue
+
+            inventory[(subj, numb)] = title
+
+    return inventory
+
+
+def load_degree_plan(file_path):
+    degree_courses = []
+
+    with file_path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+
+        for row in reader:
+            year = row.get("YEAR", "").strip()
+            term = row.get("TERM", "").strip()
+            subj = row.get("SUBJ", "").strip()
+            numb = row.get("NUMB", "").strip()
+            title = row.get("TITLE", "").strip()
+
+            if not subj or not numb:
+                continue
+
+            degree_courses.append(
+                {
+                    "YEAR": year,
+                    "TERM": term,
+                    "SUBJ": subj,
+                    "NUMB": numb,
+                    "TITLE": title,
+                }
+            )
+
+    return degree_courses
+
+
+def compare_degree_to_inventory(degree_courses, inventory):
+    results = []
+
+    for course in degree_courses:
+        key = (course["SUBJ"], course["NUMB"])
+
+        if key in inventory:
+            results.append(
+                {
+                    "YEAR": course["YEAR"],
+                    "TERM": course["TERM"],
+                    "SUBJ": course["SUBJ"],
+                    "NUMB": course["NUMB"],
+                    "DEGREE_TITLE": course["TITLE"],
+                    "INVENTORY_TITLE": inventory[key],
+                    "STATUS": "MATCHED",
+                }
+            )
+        else:
+            results.append(
+                {
+                    "YEAR": course["YEAR"],
+                    "TERM": course["TERM"],
+                    "SUBJ": course["SUBJ"],
+                    "NUMB": course["NUMB"],
+                    "DEGREE_TITLE": course["TITLE"],
+                    "INVENTORY_TITLE": "",
+                    "STATUS": "NOT FOUND",
+                }
+            )
+
+    return results
+
+
+def write_match_report(file_path, results):
+    with file_path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(
+            [
+                "YEAR",
+                "TERM",
+                "SUBJ",
+                "NUMB",
+                "DEGREE_TITLE",
+                "INVENTORY_TITLE",
+                "STATUS",
+            ]
+        )
+
+        for row in results:
+            writer.writerow(
+                [
+                    row["YEAR"],
+                    row["TERM"],
+                    row["SUBJ"],
+                    row["NUMB"],
+                    row["DEGREE_TITLE"],
+                    row["INVENTORY_TITLE"],
+                    row["STATUS"],
+                ]
+            )
+
+
+def print_summary(results):
+    matched = sum(1 for row in results if row["STATUS"] == "MATCHED")
+    not_found = sum(1 for row in results if row["STATUS"] == "NOT FOUND")
+
+    print(f"Matched: {matched}")
+    print(f"Not found: {not_found}")
+    print()
+
+    for row in results:
+        print(
+            f'{row["SUBJ"]} {row["NUMB"]} | {row["STATUS"]} | '
+            f'Degree: {row["DEGREE_TITLE"]} | '
+            f'Inventory: {row["INVENTORY_TITLE"]}'
+        )
+
+
+def main():
+    repo_root = Path(__file__).resolve().parents[2]
+
+    inventory_file = repo_root / "data" / "processed" / "course_inventory.csv"
+
+    degree_file = (
+        repo_root
+        / "data"
+        / "degree_plans"
+        / "matched"
+        / "computer_science_bs.csv"
+    )
+
+    output_file = (
+        repo_root
+        / "data"
+        / "degree_plans"
+        / "matched"
+        / "computer_science_bs_match_report.csv"
+    )
+
+    inventory = load_course_inventory(inventory_file)
+    degree_courses = load_degree_plan(degree_file)
+    results = compare_degree_to_inventory(degree_courses, inventory)
+
+    write_match_report(output_file, results)
+    print_summary(results)
+
+    print()
+    print(f"Match report written to: {output_file}")
+
+
+if __name__ == "__main__":
+    main()
