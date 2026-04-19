@@ -1,0 +1,49 @@
+#Grade Analysis Subsystem
+
+#A. Role:
+#The grade analytics subsystem serves as the core processing 
+#unit of the system, combining grade data and degree requirements 
+#to generate analytical insights and reports. It accepts user-defined
+#parameters such as major and year range, then retrieves the relevant 
+#course requirements from the degree requirement manager. Using this 
+# ourse set, it queries the grade data processor to obtain corresponding 
+#grade data, which is then filtered based on the specified time range. 
+#The engine performs computations to generate grade distributions and 
+#instructor comparisons, and compiles the results into a structured format 
+#suitable for reporting. These results are then passed to the interface
+#layer for presentation.
+
+#B. Interface Specification:
+#This acts as the central computation module of the system.
+#Generate analytics
+#Accepts an analysis request 
+#Returns a structured analysis result
+#Get grade distribution
+#Computes grade distributions for a set of courses
+#Compare instructors
+#Produces instructor comparison metrics
+#Summarize results
+#Converts analysis outputs into a structured summary
+
+#C. Static Model:
+#The module takes a student's major and declared courses as input. 
+#pulls the requirement list from the Degree Requirements subsystem. 
+#Retrieves average grades per course-professor pair from the Grade 
+#Data subsystem. scores and sorts the valid combinations, and shows
+#the final ranked output.
+
+#D. Dynamic Model:
+#The module takes the student's major, parses through the major 
+#requirements, filters out already-completed courses, retrieves the 
+#highest available grade data for each remaining requirement, ranks 
+#the combinations, and returns the top schedule options.
+
+
+#E. Rationale:
+#The Grade Analysis module is designed around filtering and ranking 
+#the data from the grades and degree requirements. It takes user input 
+#and returns recommendations based on their needs. Each stage of the 
+#analysis narrows the data down until it is left with the final ranking 
+#requirements. While doing this, the module maintains a separation between 
+#the data retrieval and decision logic so that the analysis focuses 
+#entirely on decision logic.
