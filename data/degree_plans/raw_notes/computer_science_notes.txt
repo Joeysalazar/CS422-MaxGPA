@@ -1,0 +1,38 @@
+Computer Science BS
+
+FIXED REQUIRED
+CS 210
+CS 211
+CS 212
+MATH 231
+MATH 232
+CS 313
+CS 314
+CS 315
+CS 330
+CS 415
+CS 422
+CS 425
+MATH 341
+
+CHOICE GROUPS
+MATH 251Z or MATH 261 or MATH 246
+MATH 252Z or MATH 247
+MATH 343 or MATH 345M
+PHIL 223 or PHIL 123
+WR 320 or WR 321 or HC 301H
+
+SCIENCE GROUPS
+12 credits from one science area
+
+ELECTIVE REQUIREMENTS
+Upper-division CS electives
+Upper-division math or theoretical CS elective
+
+MATCH CHECK
+CS fixed courses found in dataset
+MATH options found in dataset
+PHIL options found in dataset
+WR options found in dataset
+HC 301H found in dataset
+Science group still needs checking

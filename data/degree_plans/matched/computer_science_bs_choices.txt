@@ -1,0 +1,37 @@
+Computer Science BS - Choice Groups
+
+CALCULUS 1
+MATH 251Z
+MATH 261
+MATH 246
+
+CALCULUS 2
+MATH 252Z
+MATH 247
+
+STATS
+MATH 343
+MATH 345M
+
+ETHICS
+PHIL 223
+PHIL 123
+
+WRITING
+WR 320
+WR 321
+HC 301H
+
+SCIENCE AREA
+12 credits from one listed science area
+
+Possible subject areas found in dataset:
+BI
+CH
+ERTH
+GEOG
+PHYS
+
+ELECTIVE REQUIREMENTS
+Upper-division CS electives
+Upper-division math or theoretical CS elective

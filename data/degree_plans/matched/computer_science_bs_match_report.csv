@@ -1,0 +1,14 @@
+YEAR,TERM,SUBJ,NUMB,DEGREE_TITLE,INVENTORY_TITLE,STATUS
+1,1,CS,210,Computer Science I,Computer Science I,MATCHED_EXACT
+1,2,CS,211,Computer Science II,Computer Science II,MATCHED_EXACT
+1,3,CS,212,Computer Science III,Computer Science III,MATCHED_EXACT
+1,1,MATH,231,Elem Discrete Math I,Elem Discrete Math I,MATCHED_EXACT
+1,2,MATH,232,Elem Discrete Math II,Elem Discrete Math II,MATCHED_EXACT
+2,1,CS,313,Interm Data Structures,Interm Data Structures,MATCHED_EXACT
+2,1,CS,314,Computer Organization,Computer Organization,MATCHED_EXACT
+2,2,CS,315,Intermed Algorithms,Intermed Algorithms,MATCHED_EXACT
+2,3,CS,330,C/C++ and Unix,C/C++ and Unix,MATCHED_EXACT
+3,1,MATH,341,Elem Linear Algebra,Elem Linear Algebra,MATCHED_EXACT
+3,2,CS,415,Operating Systems,Operating Systems,MATCHED_EXACT
+3,2,CS,422,Software Method I,Software Method I,MATCHED_EXACT
+3,3,CS,425,Princ of Program Lang,Princ of Program Lang,MATCHED_EXACT

@@ -1,0 +1,8 @@
+YEAR,TERM,SUBJ,NUMB,DEGREE_TITLE,INVENTORY_TITLE,STATUS
+1,1,WR,121Z,Composition I,Composition I,MATCHED_EXACT
+1,2,PSY,201Z,Intro to Psychology I,Intro to Psychology I,MATCHED_EXACT
+1,3,PSY,202Z,Intro to Psychology II,Intro to Psychology II,MATCHED_EXACT
+2,3,STAT,243Z,Elem Statistics I,Elem Statistics I,MATCHED_EXACT
+2,3,PSY,301,Scientific Thinking,Scientific Thinking,MATCHED_EXACT
+3,1,PSY,302,Statistical Meth Psych,Statistical Meth Psych,MATCHED_EXACT
+3,2,PSY,303,Research Meth Psych,Research Meth Psych,MATCHED_EXACT

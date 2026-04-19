@@ -1,0 +1,43 @@
+Architecture BArch
+
+FIXED REQUIRED
+ARCH 283
+ARCH 284
+ARCH 383
+ARCH 384
+ARCH 484 (4 terms required)
+ARCH 485
+ARCH 486
+ARCH 201
+ARCH 202
+ARCH 222
+ARCH 423
+ARCH 430
+ARCH 440
+ARCH 450
+ARCH 461
+ARCH 462
+ARCH 470
+ARCH 471
+ARCH 491
+ARCH 492
+ARCH 417
+ARH 314
+ARH 315
+
+CHOICE GROUPS
+PHYS 201 or PHYS 251
+PHYS 202 or PHYS 252
+
+FLEXIBLE / APPROVED REQUIREMENTS
+Approved advanced technology course
+Two additional architectural history courses
+Subject area electives
+Upper-division elective courses outside ARCH, ART, IARC, or MUP
+
+QUESTIONS / NEEDS MATCH CHECK
+Need to check how ARCH courses appear in dataset
+Need to check how ARH courses appear in dataset
+Need to check how IARC and LA appear in dataset
+Need to check PHYS options in dataset
+ARCH 484 has repeat/term requirement
