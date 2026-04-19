@@ -31,7 +31,20 @@ CH
 ERTH
 GEOG
 PHYS
+PSY
 
 ELECTIVE REQUIREMENTS
 Upper-division CS electives
 Upper-division math or theoretical CS elective
+
+DEGREE GUIDE CORE ED
+Arts and Letters course
+Arts and Letters course
+Arts and Letters course
+
+Social Science course
+Social Science course
+Social Science course
+Social Science course
+
+CoreEd / cultural literacy requirement as needed
