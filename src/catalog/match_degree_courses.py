@@ -3,6 +3,10 @@ import sys
 from pathlib import Path
 
 
+def normalize_title(title):
+    return " ".join(title.lower().replace("&", "and").split())
+
+
 def load_course_inventory(file_path):
     inventory = {}
 
@@ -57,19 +61,7 @@ def compare_degree_to_inventory(degree_courses, inventory):
     for course in degree_courses:
         key = (course["SUBJ"], course["NUMB"])
 
-        if key in inventory:
-            results.append(
-                {
-                    "YEAR": course["YEAR"],
-                    "TERM": course["TERM"],
-                    "SUBJ": course["SUBJ"],
-                    "NUMB": course["NUMB"],
-                    "DEGREE_TITLE": course["TITLE"],
-                    "INVENTORY_TITLE": inventory[key],
-                    "STATUS": "MATCHED",
-                }
-            )
-        else:
+        if key not in inventory:
             results.append(
                 {
                     "YEAR": course["YEAR"],
@@ -78,9 +70,31 @@ def compare_degree_to_inventory(degree_courses, inventory):
                     "NUMB": course["NUMB"],
                     "DEGREE_TITLE": course["TITLE"],
                     "INVENTORY_TITLE": "",
-                    "STATUS": "NOT FOUND",
+                    "STATUS": "NOT_FOUND",
                 }
             )
+            continue
+
+        inventory_title = inventory[key]
+        degree_title_norm = normalize_title(course["TITLE"])
+        inventory_title_norm = normalize_title(inventory_title)
+
+        if degree_title_norm == inventory_title_norm:
+            status = "MATCHED_EXACT"
+        else:
+            status = "MATCHED_TITLE_DIFF"
+
+        results.append(
+            {
+                "YEAR": course["YEAR"],
+                "TERM": course["TERM"],
+                "SUBJ": course["SUBJ"],
+                "NUMB": course["NUMB"],
+                "DEGREE_TITLE": course["TITLE"],
+                "INVENTORY_TITLE": inventory_title,
+                "STATUS": status,
+            }
+        )
 
     return results
 
@@ -115,11 +129,13 @@ def write_match_report(file_path, results):
 
 
 def print_summary(results, degree_name):
-    matched = sum(1 for row in results if row["STATUS"] == "MATCHED")
-    not_found = sum(1 for row in results if row["STATUS"] == "NOT FOUND")
+    exact = sum(1 for row in results if row["STATUS"] == "MATCHED_EXACT")
+    title_diff = sum(1 for row in results if row["STATUS"] == "MATCHED_TITLE_DIFF")
+    not_found = sum(1 for row in results if row["STATUS"] == "NOT_FOUND")
 
-    print(f"{degree_name}")
-    print(f"Matched: {matched}")
+    print(degree_name)
+    print(f"Matched exact: {exact}")
+    print(f"Matched with title difference: {title_diff}")
     print(f"Not found: {not_found}")
     print()
 
