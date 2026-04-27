@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>{{major}} - MaxGPA Report</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}"/>
+        <!-- Chart.js for bar charts — loaded from CDN, no install needed -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    </head>
+    <body>
+
+        <!-- Nav bar shows current major and year range at all times -->
+        <nav class="navbar">
+            <a href="/" class="nav-logo">MaxGPA</a>
+            <span class="nav-info">{{ major}} &nbsp;·&nbsp; {{ year_start }}-{{ year_end }}</span>
+        </nav>
+
+        <div class="report-page">
+            
+            <!-- Report header with legend explaining the grade buckets -->
+            <div class="report-header">
+                <h1>{{ major }}</h1>
+                <p class="report-meta">
+                    Grade Distributions · Academic year {{ year_start }}-{{ year_end}} · Data from UO Office of Public Records
+                </p>
+
+                <!-- Color-coded legend so students know what each bar represents -->
+                 <div class="legend-row">
+                    <span class="legend-chip a">A</span>
+                    <span class="legend-chip b">B</span>
+                    <span class="legend-chip c">C</span>
+                    <span class="legend-chip dnf">DNF</span>
+                    <span class="legend-note">DNF includes D-, D, D+, F, and N</span>
+                 </div>
+            </div>
+
+
+             <!--Empty state - shown if no grade data matched the selection-->
+            {% if not courses %}
+                <div class="emty-state">
+                    <p>No grade data found for the selected major and year range.</p>
+                    <a href="/" class="btn-back">← Back to Selection</a>
+                </div>
+
+            {% else %}
+                <!-- Loop through every courses returned by build_report() in app.py -->
+                {% for course in courses %}
+                <div class="course-block">
+
+                    <div class="course-header">
+                        <span class="course-code">{{ course.code }}</span>
+                        <span class="course-title">{{ course.title }}</span>
+                    </div>
+
+                    <!-- All-instructors chart: aggregates every student who took this course -->
+                    <div class="chart-group">
+                        <p class="chart-label">All Instructors</p>
+                        <div class="chart-wrap">
+                            <!-- Unique canvas ID built from loop index so Chart.js can target it-->
+                            <canvas id="chart_all_{{ loop.index }}" height="90"></canvas>
+                        </div>
+                    </div>
+
+
+                    <!-- per-instructor charts: one bar chart per instructor, sorted by % A -->
+                    {% for inst in course.instructors %}
+                    <div class="chart-group instructor-chart">
+                        <p class="chart-label">{{ inst.name }}</p>
+                        <div class="chart-wrap">
+                            <!-- ID uses both outer and inner loop index to stay unique-->
+                            <canvas id="chart_inst_{{ loop.index }}_{{ loop.index0 }}" height="90"></canvas>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Fallback message if no instructor breakdown in available-->
+                    {% if not course.instructors %}
+                        <p class="no-data">No instructor breakdown available for this course. </p>
+                    {% endif %}
+
+                </div>
+                {% endfor %}
+
+
+                <!-- Back button at the bottom of the report -->
+                <div class="report-footer">
+                    <a href="/" class="btn-back">← New report</a>
+                </div>
+
+            {% endif %}
+        </div>
+
+        <script>
+            //-- Chart colors - one per grade bucket
+            const COLORS = {
+                A: '#2d8653', //green
+                B: '#2563a8', //blue
+                C: '#c47e1a',  //amber
+                DNF: '#b03030', //red
+            };
+            const LABELS = ['A', 'B', 'C', 'DNF'];
+
+            //-- makeChart
+            //creates a single bar chart on the given canvas element.
+            //canvasId: the HTML id of the <canvas> to render into
+            //data: {A: number, B: number, C: number, DNF: number } (percentages)
+            function makeChart(canvasId, data) {
+                const ctx = document.getElementById(canvasId);
+                if (!ctx) return;
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: LABELS,
+                        datasets: [{
+                            data: [data.A, data.B, data.C, data.DNF],
+                            backgroundColor: LABELS.map(l => COLORS[1]),
+                            borderRadius: 4,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }, 
+                            tooltip: {
+                                //show percentage sign
+                                callbacks: {
+                                     label: ctx => '${ctx.parsed.y}%'
+                                    }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { callback: v => v + '%', font: { size: 11 }},
+                                grid: { color: 'rgba(0,0,0,0.06)'}
+                            },
+                            x: {
+                                ticks: {font: { size: 13, weight: '600'} },
+                                grid: {display: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            //Render all charts
+            //allData is the full courses list passed 
+            //loop through it ad call makeChart() for each canvas on the page
+            const allData = {{ courses | tojson | safe }};
+            allData.forEach((course, i ) => {
+                //render the all-instructors chart for this course
+                makeChart('chart_all_${i + 1}', course.all_instructors);
+
+                //render one chart per instructor for this course
+                course.instructors.forEach((inst, j) => {
+                    makeChart('chart_inst_${i + 1}_${j}', inst.grades);
+                });
+            });
+
+        </script>
+
+    </body>
+</html>
