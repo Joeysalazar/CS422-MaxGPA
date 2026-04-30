@@ -49,9 +49,19 @@ def filter_year(rows, start_year, end_year):
 
     return filtered
 
+def make_course_id(subj, numb):
+    return f"{subj.strip().replace(' ', '')}{numb.strip()}"
+
 #Analytics Layer
 #===================================================
 
+#helper
+def safe_int(x):
+    try:
+        return int(x)
+    except:
+        return 0
+    
 #categorize raw grade into A/B/C/DNF categories
 def categorize_grade(grade):
     #implement requirement for grouping +/- grades
@@ -68,7 +78,7 @@ def categorize_grade(grade):
         return 'B'
     elif grade.startswith('C'):
         return 'C'
-    elif grade.startswith('D', 'F', 'N'):
+    elif grade.startswith(('D', 'F', 'N')):
         return 'DNF'
     else:
         return None
@@ -86,23 +96,21 @@ def compute_grade_distribution(rows):
 
     for row in rows:
         #skip fully redacted rows
-        if row['A'] == '*' or row['TOT_NON_W'] == '0':
+        if row.get('A', '*') == '*' or row.get('TOT_NON_W', '0') == '0':
             continue
-
-        valid - True
 
         try:
             #A+/-
-            a_total = int(row['AP']) + int(row['A']) + int(row['AM'])
+            a_total = safe_int(row.get('AP')) + safe_int(row.get('A')) + safe_int(row.get('AM'))
 
             #B+/-
-            b_total = int(row['BP']) + int(row['B']) + int(row['BM'])
+            b_total = safe_int(row.get('BP')) + safe_int(row.get('B')) + safe_int(row.get('BM'))
 
             #C+/-
-            c_total = int(row['CP']) + int(row['C']) + int(row['CM'])
+            c_total = safe_int(row.get('CP')) + safe_int(row.get('C')) + safe_int(row.get('CM'))
 
             #DNF
-            dnf_total = int(row['DP']) + int(row['D']) + int(row['DM']) + int(row['F']) + int(row['N'])
+            dnf_total = safe_int(row.get('DP')) + safe_int(row.get('D')) + safe_int(row.get('DM')) + safe_int(row.get('F')) + safe_int(row.get('N'))
 
         #skip bad rows safely
         except ValueError:
@@ -120,6 +128,9 @@ def compute_grade_distribution(rows):
 
     if total == 0:
         return counts
+    
+    if a_total + b_total + c_total + dnf_total > 0:
+        valid = True
 
     return {k: round((v/total) * 100, 2) for k, v in counts.items()}
 
@@ -132,7 +143,7 @@ def group_by_course(rows):
     for row in rows:
         subj = row.get('SUBJ', '').strip()
         numb = row.get('NUMB', '').strip()
-        course_id = f"{subj}{numb}"
+        course_id = make_course_id(subj, numb)
         courses[course_id].append(row)
 
     return courses
@@ -167,7 +178,12 @@ def rank_instructionors(distributions):
     ]
 
     #rank instructors based on distribution
-    return sorted(valid, key = lambda x: x[1]['A'], reverse =True)
+    return sorted(
+    valid,
+    key=lambda x: x[1].get('A', 0),
+    reverse=True
+)
+
 
 #Integration Layer
 #===================================================
@@ -194,7 +210,7 @@ def match_degree_to_data(degree_plan, course_data):
                 'course': cid,
                 'year': course['year'],
                 'term': course['term'],
-                'missing': True
+                'missing': True,'no_data': True
             })
 
     return report
@@ -270,11 +286,8 @@ def main():
 
             if entry.get('missing'):
                 print("Missing data for this course.")
-
-            elif entry.get('distribution') == {"NO_DATA": True}:
-                print("Overall: NO DATA AVAILABLE")
-                print("No instructor ranking possible for this course.")
-
+            elif entry.get('no_data'):
+                print("No data available for this course.")
             else:
                 print(f"Overall: {entry['distribution']}")
 
